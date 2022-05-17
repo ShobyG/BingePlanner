@@ -12,10 +12,7 @@
             {{ form.search_titles.label(class="form-label") }}
 		    {{ form.search_titles(class="form-control") }}
         </div>
-        <div class="col">
-            {{ form.digit.label(class="form-label") }}
-		    {{ form.digit(class="form-control") }}
-        </div>
+
         <div class="col">
             {{ form.submit(class="btn btn-primary") }}
         </div>
@@ -25,23 +22,16 @@
     <table class="table" style = "background-image: url({{ url_for('static', filename='image.jpg', mode = 'fit') }})">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Title</th>
-<!--          <th scope="col">Birth year</th>-->
         </tr>
       </thead>
       <tbody>
 
-            {% for binge in myData %}
                 <tr>
-                    <td class="align-middle">{{ loop.index0 + 1 }}</td>
-                    <td class="align-middle"> <img src= {{ binge['thumbnail'] }} class="img-thumbnail"
-                        style="max-height:50px;max-width:50px;"> <a href={{ binge['content_urls'] }} target="_blank"
-                        rel="noopener noreferrer">{{binge['text']}}</a> </td>
-                    <td class="align-middle">{{ binge['year']}}</td>
+                    <td class="align-middle"> <img src= {{ myData['results'][0]['image'] }} class="img-thumbnail"
+                        style="max-height:50px;max-width:50px;"> <a href="[Put new page here]" target="_blank"
+                        rel="noopener noreferrer">{{myData['results'][0]['title'] }}</a> </td>
                 </tr>
-
-            {% endfor %}
 
       </tbody>
     </table>

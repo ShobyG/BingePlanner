@@ -5,7 +5,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange
 from flask_login import current_user, login_user, login_required, logout_user
 from wtforms.validators import ValidationError
 
-from moviesDatabase import find_titles
+from imdb import find_titles
 from wiki import find_births
 from models import db, login, UserModel
 from datetime import date
@@ -29,7 +29,7 @@ class loginForm(FlaskForm):
 
 class Search(FlaskForm):
     search_titles = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
-    digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
+    # digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
     submit = SubmitField(label="Search")
 
 
@@ -84,9 +84,8 @@ def search_title():
         if current_user.is_authenticated:
             if request.method == "POST":
                 title = request.form["search_titles"]
-                title = title.split("-")
-                digits = request.form["digit"]
-                return render_template("search.html", form=form, myData=find_titles(f"{title[0]}", digits))
+                # digits = request.form["digit"]
+                return render_template("search.html", form=form, myData=find_titles(title))
             elif request.method == "GET":
                 return render_template("home.html", form=form)
         return redirect("/")
@@ -117,7 +116,7 @@ def login():
             if user is not None and user.check_password(pw):
                 login_user(user)
                 flash(f"Welcome back {email}. Logged in successfully", "info")
-                flash("Please input date and range of results", "info")
+                # flash("Please input date and range of results", "info")
                 return redirect('/home')
     return render_template("login.html", form=form)
 

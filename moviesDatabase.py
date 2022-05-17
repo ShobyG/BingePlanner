@@ -1,23 +1,43 @@
 import requests
 
+url = "https://unogs-unogs-v1.p.rapidapi.com/search/titles"
 
-def find_titles(movieTitle, size=10):
-    size = int(size)
-    url = "https://moviesdatabase.p.rapidapi.com/titles/search/title/"
+querystring = {"order_by":"date","title":"buffy","type":"series"}
 
-    querystring = {"info": "mini_info", "limit": "10", "page": "1", "titleType": "movie"}
+headers = {
+	"X-RapidAPI-Host": "unogs-unogs-v1.p.rapidapi.com",
+	"X-RapidAPI-Key": "2c5309d41amshd48304e086ef266p111a0bjsnf5f5f94a87b7"
+}
 
-    headers = {
-        "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com",
-        "X-RapidAPI-Key": "2c5309d41amshd48304e086ef266p111a0bjsnf5f5f94a87b7"
-    }
+response = requests.request("GET", url, headers=headers, params=querystring)
 
-    response = requests.get(url + f"{movieTitle}")
-    # response = requests.request("GET", url, headers=headers, params=querystring)
-    data = response.json()
+print(response.text)
 
-    return print(response.text)
-	# return (print(response.text))
+
+
+
+
+
+# import requests
+#
+#
+# def find_titles(movieTitle, size=10):
+#     size = int(size)
+#     url = "https://moviesdatabase.p.rapidapi.com/titles/search/title/"
+#
+#     querystring = {"info": "mini_info", "limit": "10", "page": "1", "titleType": "movie"}
+#
+#     headers = {
+#         "X-RapidAPI-Host": "moviesdatabase.p.rapidapi.com",
+#         "X-RapidAPI-Key": "2c5309d41amshd48304e086ef266p111a0bjsnf5f5f94a87b7"
+#     }
+#
+#     response = requests.get(url + f"{movieTitle}")
+#     # response = requests.request("GET", url, headers=headers, params=querystring)
+#     data = response.json()
+#
+#     return print(response.text)
+# 	# return (print(response.text))
 
 
 
