@@ -20,12 +20,12 @@ class loginForm(FlaskForm):
 # class Search(FlaskForm):
 #     digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
 #     submit = SubmitField(label="Search")
-#     birthday = DateField(label="Enter your birthday", default=date.today(), validators=[DataRequired()])
+    birthday = DateField(label="Enter your birthday", default=date.today(), validators=[DataRequired()])
 
-    # def validate_birthday(self, field):
-    #     if field.data > date.today():
-    #         flash("Choose a past or present date")
-    #         raise ValidationError("Choose a past or present date")
+# def validate_birthday(self, field):
+#     if field.data > date.today():
+#         flash("Choose a past or present date")
+#         raise ValidationError("Choose a past or present date")
 
 class Search(FlaskForm):
     search_titles = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
@@ -33,6 +33,10 @@ class Search(FlaskForm):
     submit = SubmitField(label="Search")
 
 
+class Input(FlaskForm):
+    input_time = IntegerField(label="Please input the amount of time you wish to invest", validators=[DataRequired()])
+    # birthday = DateField(label="Please enter when you would like to start", default=date.today(), validators=[DataRequired()])
+    submit = SubmitField(label="Search")
 
 
 app = Flask(__name__)
@@ -61,22 +65,6 @@ def create_table():
         addUser("vinz_klortho@msn.com", "reek42")
 
 
-# @app.route('/birthday', methods=["POST", "GET"])
-# def same_birthday():
-#     form = Search()
-#     if form.validate_on_submit():
-#         if current_user.is_authenticated:
-#             if request.method == "POST":
-#                 birthday = request.form["birthday"]
-#                 birthday = birthday.split("-")
-#                 digits = request.form["digit"]
-#                 return render_template("search.html", form=form, myData=find_births(f"{birthday[1]}/{birthday[2]}",
-#                                                                                     birthday[0], digits))
-#             elif request.method == "GET":
-#                 return render_template("home.html", form=form)
-#         return redirect("/")
-#     return render_template("home.html", form=form)
-
 @app.route('/search', methods=["POST", "GET"])
 def search_title():
     form = Search()
@@ -90,6 +78,25 @@ def search_title():
                 return render_template("home.html", form=form)
         return redirect("/")
     return render_template("home.html", form=form)
+
+
+@app.route("/display", methods=["POST", "GET"])
+def display_choice():
+    # form = Input()
+    form = Search()
+    # if current_user.is_authenticated:
+    #     return render_template("display_selection.html", form=form)
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                title = request.form["search_titles"]
+                # digits = request.form["digit"]
+                return render_template("display_selection.html", form=form, myData=find_titles(title))
+                # return render_template("display_selection.html", form=form, myData=search_title())
+            elif request.method == "GET":
+                return render_template("display_selection.html", form=form)
+        return "/display"
+    return render_template("display_selection.html", form=form)
 
 
 @app.route("/")
