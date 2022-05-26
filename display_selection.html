@@ -1,12 +1,14 @@
 {% extends "base.html" %}
+{% extends "search.html" %}
+
 {% set active_page = 'Binge-Planner' %}
 {% block title %} Binge-Planner
 <link href="myStyle.css" rel="stylesheet"/>
 {% endblock %}
 
-<!--{% block content %}-->
-<!--    <form action="#" method="post">-->
-<!--    {{ form.csrf_token }}-->
+{% block content %}
+    <form action="#" method="post">
+    {{ form.csrf_token }}
 <!--    <div class="row" style = "background-image: url({{ url_for('static', filename='image.jpg', mode = 'fit') }})">-->
 <!--        <div class="col">-->
 <!--            {{ form.search_titles.label(class="form-label") }}-->
@@ -14,10 +16,15 @@
 <!--        </div>-->
 
 <!--        <div class="col">-->
+<!--            {{ form.input_ID.label(class="form-label") }}-->
+<!--		    {{ form.input_ID(class="form-control") }}-->
+<!--        </div>-->
+
+<!--        <div class="col">-->
 <!--            {{ form.submit(class="btn btn-primary") }}-->
 <!--        </div>-->
 <!--    </div>-->
-<!--    </form>-->
+    </form>
 
 <select class="form-select form-select-lg mb-3 align-right" aria-label=".form-select-lg example" style="max-height:150px;
                   max-width:200px;">>
@@ -32,6 +39,10 @@
 
 </select>
 
+        <div class="col">
+            {{ form.choose(class="btn btn-primary") }}
+        </div>
+
 
 <table class="table table-striped">
   <thead>
@@ -39,7 +50,7 @@
       <th scope="col"></th>
       <th scope="col">Name</th>
       <th scope="col">Synopsis</th>
-      <th scope="col">RunTime</th>
+      <th scope="col">Total RunTime</th>
     </tr>
   </thead>
   <tbody>
@@ -48,8 +59,8 @@
             <tr>
               <th scope="row"></th>
               <td class="align-middle"><img src={{ result['image'] }} class="img-thumbnail" style="max-height:150px;
-                  max-width:150px;" <a class="align-middle" href="[display]" target="_blank" rel="noopener noreferrer">
-                      {{ result['title']}} </a> </td>
+                  max-width:150px;" class="align-middle" href="[display]" target="_blank" rel="noopener noreferrer">
+                      {{ result['title']}} </td>
                 <td class="align-middle">{{ result['plot']}}</td>
                 <td class="align-middle">{{ result['runtimeStr']}}</td>
 			</tr>
