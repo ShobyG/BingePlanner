@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange
 from flask_login import current_user, login_user, login_required, logout_user
 from wtforms.validators import ValidationError
 
+from calender_event import CalenderEvent
 from imdb import find_titles
 from wiki import find_births
 from models import db, login, UserModel
@@ -20,7 +21,7 @@ class loginForm(FlaskForm):
 # class Search(FlaskForm):
 #     digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
 #     submit = SubmitField(label="Search")
-    birthday = DateField(label="Enter your birthday", default=date.today(), validators=[DataRequired()])
+#     birthday = DateField(label="Enter your birthday", default=date.today(), validators=[DataRequired()])
 
 # def validate_birthday(self, field):
 #     if field.data > date.today():
@@ -29,8 +30,19 @@ class loginForm(FlaskForm):
 
 class Search(FlaskForm):
     search_titles = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
+    # moreinfo = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
     # digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
     submit = SubmitField(label="Search")
+    choose = SubmitField(label="Approve")
+
+
+class MovieEventForm(FlaskForm):
+    """ form to create movie event"""
+    event_name = StringField(label="movie name", validators=[DataRequired()])
+    length = IntegerField(label="movie length", validators=[DataRequired()])
+    start_date = DateField(label="watch movie on", default=date.today(), validators=[DataRequired()])
+    start_time = TimeField("Start")
+    add_event = SubmitField(label="Add event")
 
 
 class Input(FlaskForm):
@@ -89,7 +101,10 @@ def display_choice():
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
-                title = request.form["search_titles"]
+                # title = request.form["search_titles"]
+                # title = request.form["moreinfo"]
+                title = request.args.get("moreinfo")
+
                 # digits = request.form["digit"]
                 return render_template("display_selection.html", form=form, myData=find_titles(title))
                 # return render_template("display_selection.html", form=form, myData=search_title())
@@ -98,6 +113,23 @@ def display_choice():
         return "/display"
     return render_template("display_selection.html", form=form)
 
+
+@app.route('/movie_event', methods=["POST", "GET"])
+def movie_event_page():
+    form = MovieEventForm()
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                event_name = request.form["event_name"]
+                length = request.form["length"]
+                start_date = request.form["start_date"]
+                start_time = request.form["start_time"]
+                ce = CalenderEvent([], event_name, start_date, start_time, length)
+                events = ce.events
+                return render_template("calendar.html", events=events)
+            if request.method == "GET":
+                return render_template("movie_event.html", form=form)
+    return render_template("movie_event.html", form=form)
 
 @app.route("/")
 def root():
