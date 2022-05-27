@@ -44,5 +44,5 @@ def find_id(imdbID):
 
 # myData = []
 if __name__ == '__main__':
-    find_titles("angel")
+    find_titles_k("angel")
     find_id("tt0162065")

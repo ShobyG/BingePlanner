@@ -279,7 +279,7 @@ def movie_event_page():
                 start_time = request.form["start_time"]
                 ce = CalenderEvent([], event_name, start_date, start_time, length)
                 events = ce.events
-                return render_template("calendar.html", events=events)
+                return render_template("calendar2.html", events=events)
             if request.method == "GET":
                 return render_template("movie_event.html", form=form)
     return render_template("movie_event.html", form=form)
