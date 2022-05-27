@@ -19,18 +19,22 @@
 <!--    </div>-->
 <!--    </form>-->
 
-<select class="form-select form-select-lg mb-3 align-right" aria-label=".form-select-lg example" style="max-height:150px;
-                  max-width:200px;">>
-  <option selected>Select Day</option>
-  <option value="1">Monday</option>
-  <option value="2">Tuesday</option>
-  <option value="3">Wednesday</option>
-  <option value="4">Thursday</option>
-  <option value="5">Friday</option>
-  <option value="6">Saturday</option>
-  <option value="7">Sunday</option>
+<!--<select class="form-select form-select-lg mb-3 align-right" aria-label=".form-select-lg example" style="max-height:150px;-->
+<!--                  max-width:200px;">>-->
+<!--  <option selected>Select Day</option>-->
+<!--  <option value="1">Monday</option>-->
+<!--  <option value="2">Tuesday</option>-->
+<!--  <option value="3">Wednesday</option>-->
+<!--  <option value="4">Thursday</option>-->
+<!--  <option value="5">Friday</option>-->
+<!--  <option value="6">Saturday</option>-->
+<!--  <option value="7">Sunday</option>-->
 
-</select>
+<!--</select>-->
+
+        <div class="col">
+            {{ form.choose(class="btn btn-primary") }}
+        </div>
 
 
 <table class="table table-striped">
@@ -39,7 +43,7 @@
       <th scope="col"></th>
       <th scope="col">Name</th>
       <th scope="col">Synopsis</th>
-      <th scope="col">RunTime</th>
+      <th scope="col">Total RunTime</th>
     </tr>
   </thead>
   <tbody>
@@ -48,8 +52,8 @@
             <tr>
               <th scope="row"></th>
               <td class="align-middle"><img src={{ result['image'] }} class="img-thumbnail" style="max-height:150px;
-                  max-width:150px;" <a class="align-middle" href="[display]" target="_blank" rel="noopener noreferrer">
-                      {{ result['title']}} </a> </td>
+                  max-width:150px;" class="align-middle" href="[display]" target="_blank" rel="noopener noreferrer">
+                      {{ result['title']}} </td>
                 <td class="align-middle">{{ result['plot']}}</td>
                 <td class="align-middle">{{ result['runtimeStr']}}</td>
 			</tr>
