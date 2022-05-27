@@ -3,7 +3,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, InputRequired, NumberRange
 from wiki import find_titles
-from imdb import find_titles_k
+from imdb import find_titles_k, find_id
 from flask_login import current_user, login_user, login_required, logout_user
 from models2 import db2, login2, UserModel2
 from datetime import datetime, date
@@ -78,7 +78,16 @@ class MovieEventForm(FlaskForm):
     length = IntegerField(label="movie length", validators=[DataRequired()])
     start_date = DateField(label="watch movie on", default=date.today(), validators=[DataRequired()])
     start_time = TimeField("Start")
-    add_event = SubmitField(label="Add event")    
+    add_event = SubmitField(label="Add event")
+
+class Advanced_Search(FlaskForm):
+    search_titles = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
+    input_ID = StringField(label="Please enter the IMDB ID to narrow down list", validators=[DataRequired()])
+    # moreinfo = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
+    # digit = IntegerField(label="Number of results", default=10, validators=[DataRequired(), NumberRange(min=1, max=20)])
+
+    submit = SubmitField(label="Submit")
+    # choose = SubmitField(label="Approve")
  
 ###############            #################
 
@@ -181,7 +190,7 @@ def calendar():
             'url': url
         },
         )
-    return render_template("calendar.html", events=events)
+    return render_template("calendar2.html", events=events)
 
 @app.route('/add', methods=['GET', 'POST'])
 def add():
@@ -205,19 +214,27 @@ def add():
 ############# KEVIN ROUTES ################## 
 @app.route("/display", methods=["POST", "GET"])
 def display_choice():
+    # form = Input()
     form = Search()
+    aForm = Advanced_Search()
+    # if current_user.is_authenticated:
+    #     return render_template("display_selection.html", form=form)
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
-                title = request.form["moreinfo"]
-                return render_template("display_selection.html", form=form, myData=find_titles_k(title))
+                title = request.form["search_titles"]
+                id = request.form["input_ID"]
+                # title = request.form["moreinfo"]
+                # digits = request.form["digit"]
+                return render_template("search3.html", form=aForm, myData=find_titles(title))
+                # return render_template("display_selection.html", form=form, myData=search_title())
             elif request.method == "GET":
-                return render_template("display_selection.html", form=form)
+                return render_template("display_selection.html", form=aForm)
         return "/display"
-    return render_template("display_selection.html", form=form)
+    return render_template("search3.html", form=aForm)
 
 @app.route('/search2', methods=["POST", "GET"])
-def search_title():
+def search2_title():
     form = Search()
     if form.validate_on_submit():
         if current_user.is_authenticated:
@@ -226,9 +243,26 @@ def search_title():
                 # digits = request.form["digit"]
                 return render_template("search2.html", form=form, myData=find_titles_k(title))
             elif request.method == "GET":
-                return render_template("home.html", form=form)
+                return render_template("search2.html", form=form)
         return redirect("/")
     return render_template("home.html", form=form)
+
+@app.route('/search3', methods=["POST", "GET"])
+def search3_title():
+    form = Search()
+    aForm = Advanced_Search()
+
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                title = request.form["search_titles"]
+                # digits = request.form["digit"]
+                return render_template("search3.html", form=aForm, myData=find_titles_k(title))
+            elif request.method == "GET":
+                title = request.form["search_titles"]
+                return render_template("display_selection.html", form=aForm, myData=find_titles_k(title))
+        return redirect("/")
+    return render_template("home.html", form=aForm)
 #############              ################## 
 
 ############# SHOBY ROUTES ################## 
@@ -236,18 +270,18 @@ def search_title():
 @app.route('/movie_event', methods=["POST", "GET"])
 def movie_event_page():
     form = MovieEventForm()
-    # if form.validate_on_submit():
-        # if current_user.is_authenticated:
-    if request.method == "POST":
-        event_name = request.form["event_name"]
-        length = request.form["length"]
-        start_date = request.form["start_date"]
-        start_time = request.form["start_time"]
-        ce = CalenderEvent([], event_name, start_date, start_time, length)
-        events = ce.events
-        return render_template("calendar.html", events=events)
-    if request.method == "GET":
-        return render_template("movie_event.html", form=form)
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                event_name = request.form["event_name"]
+                length = request.form["length"]
+                start_date = request.form["start_date"]
+                start_time = request.form["start_time"]
+                ce = CalenderEvent([], event_name, start_date, start_time, length)
+                events = ce.events
+                return render_template("calendar.html", events=events)
+            if request.method == "GET":
+                return render_template("movie_event.html", form=form)
     return render_template("movie_event.html", form=form)
 
 #############             ################## 
