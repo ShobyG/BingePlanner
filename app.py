@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField, TimeField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, InputRequired, NumberRange
 from wiki import find_titles
+from imdb import find_titles_k
 from flask_login import current_user, login_user, login_required, logout_user
 from models2 import db2, login2, UserModel2
-from datetime import datetime
+from datetime import datetime, date
+from calendar_event import CalenderEvent
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your secret key'
@@ -60,6 +62,26 @@ class hwRegForm(FlaskForm):
 class searchForm(FlaskForm):
     search_text=StringField(validators=[DataRequired()])
     submit=SubmitField(label="Search")
+
+############### KEVIN FORMS #################
+class Search(FlaskForm):
+    search_titles = StringField(label="Please enter the Title you are looking for", validators=[DataRequired()])
+    submit = SubmitField(label="Search")
+
+class Input(FlaskForm):
+    input_time = IntegerField(label="Please input the amount of time you wish to invest", validators=[DataRequired()])
+    submit = SubmitField(label="Search")
+    
+class MovieEventForm(FlaskForm):
+    """ form to create movie event"""
+    event_name = StringField(label="movie name", validators=[DataRequired()])
+    length = IntegerField(label="movie length", validators=[DataRequired()])
+    start_date = DateField(label="watch movie on", default=date.today(), validators=[DataRequired()])
+    start_time = TimeField("Start")
+    add_event = SubmitField(label="Add event")    
+ 
+###############            #################
+
 
 @app.route("/search",methods=['GET','POST'])
 @login_required
@@ -136,7 +158,7 @@ def register():
                 return redirect('/search')
             else:
                 print(f"else user is not none: {user}")
-                return redirect('/register')
+                return redirect('/register.html')
         else:
             print("GET request")
     else:
@@ -178,6 +200,59 @@ def add():
         },
         )
     return render_template("calendar.html", events=events)
+
+
+############# KEVIN ROUTES ################## 
+@app.route("/display", methods=["POST", "GET"])
+def display_choice():
+    form = Search()
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                title = request.form["moreinfo"]
+                return render_template("display_selection.html", form=form, myData=find_titles_k(title))
+            elif request.method == "GET":
+                return render_template("display_selection.html", form=form)
+        return "/display"
+    return render_template("display_selection.html", form=form)
+
+@app.route('/search2', methods=["POST", "GET"])
+def search_title():
+    form = Search()
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            if request.method == "POST":
+                title = request.form["search_titles"]
+                # digits = request.form["digit"]
+                return render_template("search2.html", form=form, myData=find_titles_k(title))
+            elif request.method == "GET":
+                return render_template("home.html", form=form)
+        return redirect("/")
+    return render_template("home.html", form=form)
+#############              ################## 
+
+############# SHOBY ROUTES ################## 
+
+@app.route('/movie_event', methods=["POST", "GET"])
+def movie_event_page():
+    form = MovieEventForm()
+    # if form.validate_on_submit():
+        # if current_user.is_authenticated:
+    if request.method == "POST":
+        event_name = request.form["event_name"]
+        length = request.form["length"]
+        start_date = request.form["start_date"]
+        start_time = request.form["start_time"]
+        ce = CalenderEvent([], event_name, start_date, start_time, length)
+        events = ce.events
+        return render_template("calendar.html", events=events)
+    if request.method == "GET":
+        return render_template("movie_event.html", form=form)
+    return render_template("movie_event.html", form=form)
+
+#############             ################## 
+
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0',debug=True)
