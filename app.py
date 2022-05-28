@@ -212,26 +212,25 @@ def add():
 
 
 ############# KEVIN ROUTES ################## 
-@app.route("/display", methods=["POST", "GET"])
+app.route("/display", methods=["POST", "GET"])
 def display_choice():
     # form = Input()
     form = Search()
-    aForm = Advanced_Search()
     # if current_user.is_authenticated:
     #     return render_template("display_selection.html", form=form)
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
-                title = request.form["search_titles"]
-                id = request.form["input_ID"]
+                # title = request.form["search_titles"]
                 # title = request.form["moreinfo"]
+                title = request.args.get("moreinfo")
                 # digits = request.form["digit"]
-                return render_template("search3.html", form=aForm, myData=find_titles(title))
+                return render_template("display_selection.html", form=form, myData=find_titles(title))
                 # return render_template("display_selection.html", form=form, myData=search_title())
             elif request.method == "GET":
-                return render_template("display_selection.html", form=aForm)
+                return render_template("display_selection.html", form=form)
         return "/display"
-    return render_template("search3.html", form=aForm)
+    return render_template("display_selection.html", form=form)
 
 @app.route('/search2', methods=["POST", "GET"])
 def search2_title():

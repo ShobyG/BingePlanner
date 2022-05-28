@@ -14,12 +14,6 @@
         </div>
 
         <div class="col">
-            {{ form.input_ID.label(class="form-label") }}
-		    {{ form.input_ID(class="form-control") }}
-        </div>  
-
-
-        <div class="col">
             {{ form.submit(class="btn btn-primary") }}
         </div>
     </div>
@@ -40,18 +34,23 @@
       </thead>
       <tbody>
 
-      {% for result in myData %}
-            <tr>
-              <th scope="row"></th>
-              <td class="align-middle"><img src={{ result['image'] }} class="img-thumbnail" style="max-height:150px;max-width:150px;">
-                  <a class="align-middle" href="display" target="_blank" rel="noopener noreferrer">
-                      {{ result['title']}} </a> </td>
-                <td class="align-middle"> <form action="/display" method="post">
-                <input type="submit" name=moreinfo value={{result['id']}} />
-                </form></td>
-                <td class="align-middle">{{ result['genres']}}</td>
-                <td class="align-middle">{{ result['imDbRating']}}</td>
-                <td class="align-middle">{{ result['description']}}</td>
+        {% for result in myData %}
+        <tr>
+          <th scope="row"></th>
+          <td class="align-middle"><img src={{ result['image'] }} class="img-thumbnail" style="max-height:150px;max-width:150px;">
+              <form action="/display" method="post"> <input type="submit" name=moreinfo value={{result['title']}}
+                                                            style="max-height:150px;max-width:200px;">
+            </form> </td>
+
+
+<!--                <td class="align-middle"> <form action="/display" method="post">-->
+<!--                <input type="submit" name=moreinfo value={{result['id']}} />-->
+<!--                </form></td>-->
+
+            <td class="align-middle">{{ result['id']}}</td>
+            <td class="align-middle">{{ result['genres']}}</td>
+            <td class="align-middle">{{ result['imDbRating']}}</td>
+            <td class="align-middle">{{ result['description']}}</td>
 
             </tr>
       {% endfor %}
