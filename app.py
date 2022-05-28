@@ -9,7 +9,7 @@ import json
 import os
 
 
-from wiki import find_titles
+from wiki import find_titles, find_id
 from models import db, login, UserModel, EventModel
 
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
@@ -169,6 +169,11 @@ def search():
     return render_template("search.html",form=form)
 
 
+@app.route("/<imdb_id>")
+def search_by_imdb_id(imdb_id):
+    title = find_id(imdb_id)
+    return f"title of {imdb_id} is {title}"
+
 @app.route("/home",methods=['GET','POST'])
 def home():
     return render_template("index.html")
@@ -290,7 +295,7 @@ def movie_event_page():
                 event_name = request.form["event_name"]
                 length = request.form["length"]
                 start_date = request.form["start_date"]
-                start_time = request.form["start_time"] 
+                start_time = request.form["start_time"]
                 user_event = EventModel.query.filter_by(username=un.get_username()).first()
                 if user_event is not None:
                     events = create_event_list()
