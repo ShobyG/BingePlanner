@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% set active_page = 'login' %}
+{% block title %} Login {% endblock %}
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }}</p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+<div class="row">
+    <div class="col">
+    <div class="form_wrapper">
+    <div class="form_container">
+        <div class="title_container">
+      <h2> Series Event </h2>
+    </div>
+
+<form method="post">
+  {{ form.csrf_token }}
+  <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.series_name.label(class="form-label") }}
+		{{ form.series_name(class="form-control") }}
+    </fieldset>
+  </div>
+  <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.length.label(class="form-label") }}
+		{{ form.length(class="form-control") }}
+    </fieldset>
+  </div>
+  <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.days(class="form-control") }}
+    </fieldset>
+  </div>
+    <div class="mb-3">
+    <fieldset class="form-field">
+		{{ form.monday.label(class="form-label") }}
+		{{ form.monday(class="form-control") }}
+        {{ form.tuesday.label(class="form-label") }}
+		{{ form.tuesday(class="form-control") }}
+        {{ form.wednesday.label(class="form-label") }}
+		{{ form.wednesday(class="form-control") }}
+        {{ form.thursday.label(class="form-label") }}
+		{{ form.thursday(class="form-control") }}
+        {{ form.friday.label(class="form-label") }}
+		{{ form.friday(class="form-control") }}
+        {{ form.saturday.label(class="form-label") }}
+		{{ form.saturday(class="form-control") }}
+        {{ form.sunday.label(class="form-label") }}
+		{{ form.sunday(class="form-control") }}
+
+    </fieldset>
+    </div>
+  {{ form.add_event(class="btn btn-primary" ) }}
+ </form>
+</div>
+    </div>
+    </div>
+    </div>
+
+ {% endblock %}

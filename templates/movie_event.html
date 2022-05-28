@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% set active_page = 'login' %}
+{% block title %} Login {% endblock %}
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }}</p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+<div class="row">
+    <div class="col">
+    <div class="form_wrapper">
+    <div class="form_container">
+        <div class="title_container">
+      <h2> Movie Event </h2>
+    </div>
+
+<form method="post">
+  {{ form.csrf_token }}
+  <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.event_name.label(class="form-label") }}
+		{{ form.event_name(class="form-control") }}
+    </fieldset>
+  </div>
+  <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.length.label(class="form-label") }}
+		{{ form.length(class="form-control") }}
+    </fieldset>
+  </div>
+      <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.start_date.label(class="form-label") }}
+		{{ form.start_date(class="form-control") }}
+    </fieldset>
+  </div>
+      <div class="mb-3">
+	<fieldset class="form-field">
+		{{ form.start_time.label(class="form-label") }}
+		{{ form.start_time(class="form-control") }}
+    </fieldset>
+  </div>
+  {{ form.add_event(class="btn btn-primary" ) }}
+ </form>
+</div>
+    </div>
+    </div>
+    </div>
+
+ {% endblock %}
