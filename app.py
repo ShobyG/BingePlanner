@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, IntegerField, DateField, TimeField, widgets, SelectMultipleField
+from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, DateField, TimeField, widgets, SelectMultipleField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange
 from flask_login import current_user, login_user, login_required, logout_user
 from wtforms.validators import ValidationError
@@ -9,7 +9,7 @@ import json
 import os
 
 
-from wiki import find_titles, find_id
+from wiki import find_titles, find_id, find_episodes
 from models import db, login, UserModel, EventModel
 
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
@@ -61,6 +61,12 @@ class searchForm(FlaskForm):
     search_text=StringField(validators=[DataRequired()])
     submit=SubmitField(label="Search")
 
+class titleForm(FlaskForm):
+    title_name = StringField(label="title name", render_kw={'readonly': True})
+    title_plot = StringField(label="plot", render_kw={'readonly': True})
+    title_image = FileField()  
+    title_seasons = StringField(label="seasons")    
+    title_rating = StringField(label="rating")    
 
 class MovieEventForm(FlaskForm):
     """ form to create movie event"""
@@ -168,11 +174,23 @@ def search():
         print(form.errors)
     return render_template("search.html",form=form)
 
-
 @app.route("/<imdb_id>")
 def search_by_imdb_id(imdb_id):
-    title = find_id(imdb_id)
-    return f"title of {imdb_id} is {title}"
+    form = titleForm()
+    myData = find_id(imdb_id)
+    episodes = []
+
+    # print(len(myData['tvSeriesInfo']['seasons']))
+ 
+    if len(myData['tvSeriesInfo']['seasons']) > 1:
+        for e in myData['tvSeriesInfo']['seasons']:
+            ep = find_episodes(imdb_id, e)
+            # print(f"EP EPISODES | SEASON: {ep['episodes'][int(e)]['seasonNumber']} | EPISODE: {ep['episodes'][int(e)]['episodeNumber']} | TITLE: {ep['episodes'][int(e)]['title']}")
+            episodes.append(ep)
+    # print(episodes)  
+
+    return render_template("title.html", myData=myData, episodes=episodes, form=form)
+    # return f"title of {imdb_id} is {title}"
 
 @app.route("/home",methods=['GET','POST'])
 def home():
