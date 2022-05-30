@@ -183,10 +183,27 @@ def search_by_imdb_id(imdb_id):
     # print(len(myData['tvSeriesInfo']['seasons']))
  
     if len(myData['tvSeriesInfo']['seasons']) > 1:
-        for e in myData['tvSeriesInfo']['seasons']:
-            ep = find_episodes(imdb_id, e)
+        set = {}
+        for s in myData['tvSeriesInfo']['seasons']:
+            
+            ep = find_episodes(imdb_id, s)
             # print(f"EP EPISODES | SEASON: {ep['episodes'][int(e)]['seasonNumber']} | EPISODE: {ep['episodes'][int(e)]['episodeNumber']} | TITLE: {ep['episodes'][int(e)]['title']}")
-            episodes.append(ep)
+
+            print(f"________________________ SEASON EPISODES: {ep}" )
+
+            print(f"SeasonE: {s}")
+            season = ep['episodes'][int(s)]['seasonNumber']
+            print(f"SeasonNumber: {season}")
+            episode = ep['episodes'][int(s)]['episodeNumber'] 
+            print(f"Episode: {episode}")
+            title = ep['episodes'][int(s)]['title']
+            print(f"Title: {title}")
+            set['season'] = season 
+            set['episode'] = episode
+            set['title'] = title
+            episodes.append(set)
+            print(f"Appended episodes: {episodes}")
+            # print(f"SET: {set}")
     # print(episodes)  
 
     return render_template("title.html", myData=myData, episodes=episodes, form=form)
