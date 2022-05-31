@@ -20,7 +20,7 @@
               {{ form.title_name.label(class="form-label") }}
         </div>
         <div class="col">      
-              {{ myData['title']}}
+              {{ myData['series_title']}}
           </div>
       </div>
 
@@ -29,7 +29,7 @@
               {{ form.title_plot.label(class="form-label") }}
         </div>
         <div class="col">      
-              {{ myData['plot']}}
+              {{ myData['series_plot']}}
           </div>
       </div>
 
@@ -37,13 +37,13 @@
       <div class = "row">
 
           <div class="col">   
-              {% for num in myData['tvSeriesInfo']['seasons'] %}
+              {% for num in myData[seasons_list] %}
                   <a class = "btn btn-primary" data-bs-toggle="collapse" href="#season{{num}}" role="button" aria-controls="season{{num}}">Season {{num}}</a>    
                           <div class = "col">
                               <div class = "collapse multi-collapse" id="season{{num}}">
-                                {% for ep in episodes %}  
+                                {% for ep in range(10) %}  
 <!--                                <div class = "card card-body">Placeholder for Season {{num}} episodes  -->
-                                        <div class = "card card-body">SEASON: {{ ep['season'] }} 
+                                        <div class = "card card-body">TITLE: {{ myData[s_ep_title][num][ep] }} 
                                         </div>
                                 {% endfor %}
                                 </div>
@@ -60,12 +60,12 @@
           <div class="col">
                 {{ form.title_rating.label(class="form-label") }}
           <div class="col">      
-                {{ myData['imDbRating']}}
+                {{ myData['series_rating']}}
             </div>
           </div>
         <div class = "row">
         <div class="col">      
-          <img src={{ myData['image'] }} class="img-thumbnail" style="max-height:300px;max-width:300px;">
+          <img src={{ myData['series_image'] }} class="img-thumbnail" style="max-height:300px;max-width:300px;">
           </div>
       </div>
 

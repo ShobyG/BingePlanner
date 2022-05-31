@@ -175,15 +175,8 @@ def search():
 
 @app.route("/<imdb_id>")
 def search_by_imdb_id(imdb_id):
-    si = SeriesInfo(imdb_id)
-    si_data = si.get__series_data()
-    print(f"SI_SERIES_DATA: {si_data}")
-    si_eprun = si.get_episode_runtime(imdb_id, 2)
-    print(f"SI_EPRUN: {si_eprun}")
-    si_run = si.get_season_runtime()
-    print(f"SI_RUN: {si_run}")
-
-    # form = titleForm()
+    form = titleForm()
+    myData = SeriesInfo(imdb_id)
     # myData = find_id(imdb_id)
     # episodes = []
 
@@ -213,7 +206,7 @@ def search_by_imdb_id(imdb_id):
     #         # print(f"SET: {set}")
     # # print(episodes)  
 
-    # return render_template("title.html", myData=myData, episodes=episodes, form=form)
+    return render_template("title.html", myData=myData, form=form)
     # return f"title of {imdb_id} is {title}"
 
 @app.route("/home",methods=['GET','POST'])
