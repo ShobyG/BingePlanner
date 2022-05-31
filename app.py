@@ -7,9 +7,8 @@ from wtforms.validators import ValidationError
 from datetime import date, datetime
 import json
 import os
-
-
-from wiki import find_titles, find_id, find_episodes
+from wiki import find_titles, find_id, find_episodes, find_season_episodes
+from series_info import SeriesInfo
 from models import db, login, UserModel, EventModel
 
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
@@ -176,37 +175,45 @@ def search():
 
 @app.route("/<imdb_id>")
 def search_by_imdb_id(imdb_id):
-    form = titleForm()
-    myData = find_id(imdb_id)
-    episodes = []
+    si = SeriesInfo(imdb_id)
+    si_data = si.get__series_data()
+    print(f"SI_SERIES_DATA: {si_data}")
+    si_eprun = si.get_episode_runtime(imdb_id, 2)
+    print(f"SI_EPRUN: {si_eprun}")
+    si_run = si.get_season_runtime()
+    print(f"SI_RUN: {si_run}")
 
-    # print(len(myData['tvSeriesInfo']['seasons']))
+    # form = titleForm()
+    # myData = find_id(imdb_id)
+    # episodes = []
+
+    # # print(len(myData['tvSeriesInfo']['seasons']))
  
-    if len(myData['tvSeriesInfo']['seasons']) > 1:
-        set = {}
-        for s in myData['tvSeriesInfo']['seasons']:
+    # if len(myData['tvSeriesInfo']['seasons']) > 1:
+    #     set = {}
+    #     for s in myData['tvSeriesInfo']['seasons']:
             
-            ep = find_episodes(imdb_id, s)
-            # print(f"EP EPISODES | SEASON: {ep['episodes'][int(e)]['seasonNumber']} | EPISODE: {ep['episodes'][int(e)]['episodeNumber']} | TITLE: {ep['episodes'][int(e)]['title']}")
+    #         ep = find_episodes(imdb_id, s)
+    #         # print(f"EP EPISODES | SEASON: {ep['episodes'][int(e)]['seasonNumber']} | EPISODE: {ep['episodes'][int(e)]['episodeNumber']} | TITLE: {ep['episodes'][int(e)]['title']}")
 
-            print(f"________________________ SEASON EPISODES: {ep}" )
+    #         print(f"________________________ SEASON EPISODES: {ep}" )
 
-            print(f"SeasonE: {s}")
-            season = ep['episodes'][int(s)]['seasonNumber']
-            print(f"SeasonNumber: {season}")
-            episode = ep['episodes'][int(s)]['episodeNumber'] 
-            print(f"Episode: {episode}")
-            title = ep['episodes'][int(s)]['title']
-            print(f"Title: {title}")
-            set['season'] = season 
-            set['episode'] = episode
-            set['title'] = title
-            episodes.append(set)
-            print(f"Appended episodes: {episodes}")
-            # print(f"SET: {set}")
-    # print(episodes)  
+    #         print(f"SeasonE: {s}")
+    #         season = ep['episodes'][int(s)]['seasonNumber']
+    #         print(f"SeasonNumber: {season}")
+    #         episode = ep['episodes'][int(s)]['episodeNumber'] 
+    #         print(f"Episode: {episode}")
+    #         title = ep['episodes'][int(s)]['title']
+    #         print(f"Title: {title}")
+    #         set['season'] = season 
+    #         set['episode'] = episode
+    #         set['title'] = title
+    #         episodes.append(set)
+    #         print(f"Appended episodes: {episodes}")
+    #         # print(f"SET: {set}")
+    # # print(episodes)  
 
-    return render_template("title.html", myData=myData, episodes=episodes, form=form)
+    # return render_template("title.html", myData=myData, episodes=episodes, form=form)
     # return f"title of {imdb_id} is {title}"
 
 @app.route("/home",methods=['GET','POST'])
