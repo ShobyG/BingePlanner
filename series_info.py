@@ -1,6 +1,7 @@
 from wiki import find_id, find_season_episodes
 import isodate
 from datetime import datetime, timedelta
+import numpy as np
 
 class SeriesInfo:
     def __init__(self, imdb_id):
@@ -19,7 +20,7 @@ class SeriesInfo:
         self.series_title = self.series_info['title']
         self.series_rating = self.series_info['imDbRating']
         self.series_plot = self.series_info['plot']
-        self.series_plot = self.series_info['image']
+        self.series_image = self.series_info['image']
         print(self.series_title)
         print(self.series_rating)
         print(self.series_plot)        
@@ -33,6 +34,11 @@ class SeriesInfo:
 
     def __set_series_data(self):
         print("for each season in array:")
+        self.s_ep_title = [[0 for x in range(1,50)] for y in range(1,20)] 
+        self.s_ep_plot = [[0 for x in range(1,50)] for y in range(1,20)] 
+        self.s_ep_season = [[0 for x in range(1,50)] for y in range(1,20)] 
+        self.s_ep_number = [[0 for x in range(1,50)] for y in range(1,20)] 
+        self.s_ep_info = [[0 for x in range(1,50)] for y in range(1,20)] 
         for i in range(1, len(self.series_runtime_data)):
             print(f"Season: {i}")
             print("get season_data from SeasonEpisodes api")
@@ -48,12 +54,6 @@ class SeriesInfo:
             print("create array of episodes + 1, null for each episode (so 0 index is null, 1 index is ep1)")
             self.series_runtime_data[int(i)] = [None] * (self.season_tot_episodes[i] + 1)
             print(f"runtime_data[{i}]: {self.series_runtime_data[int(i)]}")
-            i = int(i)
-            self.s_ep_title = [[0 for x in range(1,20)] for y in range(self.seasons_tot+1)] 
-            self.s_ep_plot = [[0 for x in range(1,20)] for y in range(self.seasons_tot+1)] 
-            self.s_ep_season = [[0 for x in range(1,20)] for y in range(self.seasons_tot+1)] 
-            self.s_ep_number = [[0 for x in range(1,20)] for y in range(self.seasons_tot+1)] 
-            self.s_ep_info = [[0 for x in range(1,20)] for y in range(self.seasons_tot+1)] 
             print("for each episode:")
             for j in range(1, self.season_tot_episodes[i] + 1):
                 print(f"Episode: {j}")
@@ -66,12 +66,18 @@ class SeriesInfo:
                 print("save episode title, plot, season, number")
                 self.s_ep_title[i][j] = self.s_ep_info[i][j]['title']
                 self.s_ep_plot[i][j] = self.s_ep_info[i][j]['plot']
-                self.s_ep_season[i][j] = self.s_ep_info[i][j]['tvEpisodeInfo']['seasonNumber']
-                self.s_ep_number[i][j] = self.s_ep_info[i][j]['tvEpisodeInfo']['episodeNumber']
                 print(self.s_ep_title[i][j])
                 print(self.s_ep_plot[i][j])
-                print(self.s_ep_season[i][j])
-                print(self.s_ep_number[i][j])
+                try:
+                    self.s_ep_season[i][j] = self.s_ep_info[i][j]['tvEpisodeInfo']['seasonNumber']
+                    self.s_ep_number[i][j] = self.s_ep_info[i][j]['tvEpisodeInfo']['episodeNumber']
+                    print(self.s_ep_season[i][j])
+                    print(self.s_ep_number[i][j])
+                    if self.s_ep_season[i][j] is None:
+                        break
+                except Exception as e:
+                    print(Exception)
+                    break
                 try:
                     print("see if there is any runtime info in Title Api for this episode id")
                     run_time = self.s_ep_info[i][j]['runtimeMins']
@@ -90,10 +96,20 @@ class SeriesInfo:
                 print(f"save runtime at runtime_data[{i}][{j}]")
                 self.series_runtime_data[int(i)][int(j)] = run_time
                 print(self.series_runtime_data[int(i)][int(j)])
-
+                
         print("print the array of episode runtimes")
         print(self.series_runtime_data)
 
+        # convert 2d array to list of dictionarie
+        print(self.s_ep_title)
+        print(self.s_ep_plot)
+        print(self.s_ep_season)
+        print(self.s_ep_number)
+        x = np.array(self.s_ep_title)
+        xa = np.split(x,self.seasons_tot+1)
+        print(xa)
+        print()
+  
     def get__series_runtime_data(self):
         return self.series_runtime_data
 
