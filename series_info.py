@@ -2,7 +2,6 @@ from wiki import find_id, find_season_episodes
 import isodate
 from datetime import datetime, timedelta
 
-
 class SeriesInfo:
     def __init__(self, imdb_id):
         print("call SeriesInfo with show id")
@@ -29,7 +28,7 @@ class SeriesInfo:
 
     def __set_series_data(self):
         print("for each season in array:")
-        for i in self.__seasons_list:
+        for i in range(1, len(self.__series_runtime_data)):
             print(f"Season: {i}")
             print("get season_data from SeasonEpisodes api")
             season_data = find_season_episodes(self.__series_imdb_id, i)
@@ -44,15 +43,14 @@ class SeriesInfo:
             print("create array of episodes + 1, null for each episode (so 0 index is null, 1 index is ep1)")
             self.__series_runtime_data[int(i)] = [None] * (no_of_episodes + 1)
             print(f"runtime_data[{i}]: {self.__series_runtime_data[int(i)]}")
+            i = int(i)
+            self._s_ep_title = [[0 for x in range(no_of_episodes + 1)] for y in range(len(self.__seasons_list)+1)] 
+            self._s_ep_plot = [[0 for x in range(no_of_episodes + 1)] for y in range(len(self.__seasons_list)+1)] 
+            self._s_ep_season = [[0 for x in range(no_of_episodes + 1)] for y in range(len(self.__seasons_list)+1)] 
+            self._s_ep_number = [[0 for x in range(no_of_episodes + 1)] for y in range(len(self.__seasons_list)+1)] 
+            self._s_ep_info = [[0 for x in range(no_of_episodes + 1)] for y in range(len(self.__seasons_list)+1)] 
             print("for each episode:")
             for j in range(1, no_of_episodes+1):
-                i = int(i)
-                j = int(j)
-                self._s_ep_title = [[0 for x in range(len(self.__seasons_list)+1)] for y in range(no_of_episodes + 1)] 
-                self._s_ep_plot = [[0 for x in range(len(self.__seasons_list)+1)] for y in range(no_of_episodes + 1)] 
-                self._s_ep_season = [[0 for x in range(len(self.__seasons_list)+1)] for y in range(no_of_episodes + 1)] 
-                self._s_ep_number = [[0 for x in range(len(self.__seasons_list)+1)] for y in range(no_of_episodes + 1)] 
-                self._s_ep_info = [[0 for x in range(len(self.__seasons_list)+1)] for y in range(no_of_episodes + 1)] 
                 print(f"Episode: {j}")
                 print("get imdb id for this episode")
                 episode_imdb_id = season_data['episodes'][j-1]['id']
