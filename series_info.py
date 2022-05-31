@@ -45,10 +45,12 @@ class SeriesInfo:
         series_data = self.get__series_data()
         season = series_data[season_no]
 
-        if season_no < len(season):
+        if season_no < len(series_data):
             for i in range(1, len(season)):
                 if season[i] is not None:
                     season_runtime += int(season[i])
+                else:
+                    pass
         return season_runtime
 
     def get_total_runtime(self):
@@ -76,11 +78,11 @@ class SeriesInfo:
 
 
 if __name__ == '__main__':
-    si = SeriesInfo('tt1865718')  # [Angel works]
+    # si = SeriesInfo('tt1865718')  # [Gravity Falls works/ Total also works]
 
-    # si = SeriesInfo('tt0944947') #[GoT works]
+    si = SeriesInfo('tt0944947') #[GoT works]
     # si = SeriesInfo('tt0303461') #[Firefly works]
-    # si = SeriesInfo('tt0162065') #[Angel works]
+    # si = SeriesInfo('tt0162065') #[Angel works/ Total also works]
 
     # si = SeriesInfo('tt8740790')
     print("_______________________________")
@@ -93,6 +95,14 @@ if __name__ == '__main__':
     print("_______________________________")
     print(si.get_episode_runtime(1, 1))
 
-    print("_______________testing 2 seasons________________")
+    print("_______________testing 8 seasons________________")
     print(si.get_season_runtime(1))
     print(si.get_season_runtime(2))
+    print(si.get_season_runtime(3))
+    print(si.get_season_runtime(4))
+    print(si.get_season_runtime(5))
+    print(si.get_season_runtime(6))
+    print(si.get_season_runtime(7))
+    print(si.get_season_runtime(8))
+
+
