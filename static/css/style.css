@@ -6,7 +6,6 @@
   --body: #0C0309;
   --white: #ffffff;
   --box-shadow: 0 8px 22px rgba(0,0,0,0.1);
-
 }
 
 .btn-primary {
@@ -36,6 +35,10 @@ a {
 .navbar .nav-link {
   font-size: 14px;
   font-weight: 700;
+}
+
+.navbar {
+  background-image: url("/static/img/image.jpg"); 
 }
 
 .hero {
