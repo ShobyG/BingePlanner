@@ -277,9 +277,9 @@ def search_by_imdb_id(imdb_id):
         user_choices["season"] = season
         season_runtime = myData.series_runtime_totals[season]
         user_choices["season_runtime"] = season_runtime
-        title = myData.series_title + " (Season " + str(season) + ")"
+        title = myData.series_title
         user_choices["title"] = title
-        series_name_season_no_runtime = f"{title}:{season_runtime}"
+        series_name_season_no_runtime = f"{title}:{season_no}:{season_runtime}"
         print(f"USER CHOICE DICT: {user_choices}")
         return redirect(url_for('series_event_page', name=series_name_season_no_runtime))
 
@@ -288,6 +288,7 @@ def search_by_imdb_id(imdb_id):
 
 @app.route("/series_event/<name>", methods=["POST", "GET"])
 def series_event_page(name):
+    print(f"(name): {name}")
     series_info = name.split(":")
     series_name = str(series_info[0])
     season_no = int(series_info[1])
