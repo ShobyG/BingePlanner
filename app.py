@@ -196,14 +196,8 @@ def search_by_imdb_id(imdb_id):
         form2.series_name.data = title
         form2.length.data = season_runtime
         return render_template("series_event.html", data=user_choices.items(), form=form2)
-    # desc = myData.series_plot
-    # img = myData.series_image
-    # rating = myData.series_rating
-    # seasons = myData.seasons_list
-    # season_runtime = myData.series_runtime_totals  
     
     return render_template("title.html", myData=myData, form=form)
-    # return f"title of {imdb_id} is {title}"
 
 @app.route("/home",methods=['GET','POST'])
 def home():

@@ -20,10 +20,6 @@
 <form method="post">
   {{ form.csrf_token }}
 
-  {% for k,v in data %}
-      {% set t = k['title'] %}
-  {% endfor %}
-{{ t }}
   <div class="mb-3">
 	<fieldset class="form-field">
 		{{ form.series_name.label(class="form-label") }}
