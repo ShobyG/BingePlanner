@@ -38,11 +38,17 @@
   {{ form.csrf_token }}
   <div class="mb-3">
 	<fieldset class="form-field">
+        {{ form.start_date.label(class="form-label") }}
+        {{ form.start_date(class="form-control") }}
+    </fieldset>
+    <fieldset class="form-field">
+        {{ form.days.label(class="form-label") }}
 		{{ form.days(class="form-control") }}
     </fieldset>
   </div>
     <div class="mb-3">
     <fieldset class="form-field">
+        <p> Enter time in Hours</p>
 		{{ form.monday.label(class="form-label") }}
 		{{ form.monday(class="form-control") }}
         {{ form.tuesday.label(class="form-label") }}

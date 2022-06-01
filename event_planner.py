@@ -5,10 +5,14 @@ from dateutil.relativedelta import *
 class EventPlanner:
     """ Event planner will spread the total_time across the days passed by the user and returns the consecutive dates
     to schedule the binge"""
-    def __init__(self, name, days, daily_hours, total_time):
+    def __init__(self, name, days, daily_hours, total_time, start_date):
         self.__now = str(datetime.now()).split(' ')
+        self.__start_date = start_date
         self.__now_date = self.__now[0]
         self.__now_time = self.__now[1]
+        if self.__start_date != self.__now_date:
+            self.__now_date = self.__start_date
+            self.__now_time = '00:00:00'
         self.__now_day = datetime.today().weekday()
         self.__set_title(name)
         self.__days = [0, 0, 0, 0, 0, 0, 0]
@@ -17,7 +21,7 @@ class EventPlanner:
         self.__set_daily_hours(daily_hours)
         self.__event_time = int(total_time)  # show time should be in minutes
         self.__dates_generated = []
-        self.__watch_hours =[]
+        self.__watch_hours = []
 
     def __set_title(self, title):
         if isinstance(title, str):

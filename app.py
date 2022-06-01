@@ -101,7 +101,14 @@ class MultiCheckboxField(SelectMultipleField):
 
 class SeriesEventForm(FlaskForm):
     """ Form to create series event"""
-    days = SelectMultipleField('Watch Days', choices=[
+    start_date = DateField(label="When do you want to start watching", default=date.today(), validators=[DataRequired()])
+
+    def validate_start_date(self, field):
+        if field.data < date.today():
+            flash("Choose a future date to plan")
+            raise ValidationError("Choose a future date to plan")
+
+    days = SelectMultipleField('Select the days you want to watch', choices=[
                                        ('0', 'Monday'),
                                        ('1', 'Tuesday'),
                                        ('2', 'Wednesday'),
@@ -285,11 +292,11 @@ def series_event_page(name):
     series_name = str(series_info[0])
     season_no = int(series_info[1])
     season_runtime = int(series_info[2])
-    print(series_info)
     form = SeriesEventForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
+                start_date = request.form["start_date"]
                 monday = request.form["monday"]
                 tuesday = request.form["tuesday"]
                 wednesday = request.form["wednesday"]
@@ -303,7 +310,7 @@ def series_event_page(name):
                 for i in range(7):
                     if str(i) in days:
                         days_lst[i] = 1
-                ep = EventPlanner(series_name, days_lst, watch_hours, int(season_runtime))
+                ep = EventPlanner(series_name, days_lst, watch_hours, int(season_runtime), start_date)
                 dates_lst = ep.date_generator()
                 watch_hours_list = ep.get_watch_hour_list()
                 user_event = EventModel.query.filter_by(username=un.get_username()).first()
