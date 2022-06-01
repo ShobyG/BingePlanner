@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel = "stylesheet" href = "https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.css">
+    <script src = "https://cdn.jsdelivr.net/npm/fullcalendar@5.4.0/main.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    </head>
+<body>
+            </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+    <div class = "container my-3">
+        <div id = "calendar"></div>
+    </div>
+    <script>
+let calendarEl = document.getElementById('calendar');
+        let calendar = new FullCalendar.Calendar(calendarEl,{
+            themeSystem: 'bootstrap5',
+            navLinks: true,
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            events :[
+                {% for event in events %}
+                {
+                    id : '{{ event.id }}',
+                    title : '{{ event.title }}',
+                    groupId: '{{ event.groupId }}',
+                    start : '{{ event.start }}',
+                    end : '{{ event.end }}',
+                },
+                {% endfor %}
+            ],
+
+            eventClick:  function(arg) {
+                // endtime = $.fullCalendar.moment(event.end).format('h:mm');
+                // starttime = $.fullCalendar.moment(event.start).format('dddd, MMMM Do YYYY, h:mm');
+                // var mywhen = starttime + ' - ' + endtime;
+                $('#title').html(arg.event.title);
+                $('#modalWhen').text(arg.event.start);
+                $('#eventID').text(arg.event.id);
+                $('#calendarModal').modal();
+            },
+
+
+        });
+
+    calendar.render();
+    const event_id = document.getElementById("eventID");
+    function pick_event_id() {
+        {#document.getElementsByName("del_button").value = document.getElementById("eventID").innerText;#}
+        document.form.del_button.value = document.getElementById("eventID").innerText
+
+    }
+</script>
+
+<div id="calendarModal" class="modal fade">
+<div class="modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Event Details</h4>
+        </div>
+        <div id="modalBody" class="modal-body">
+        <h4 id="title" class="modal-title">Title </h4>
+        <div id="modalWhen" style="margin-top:5px;"></div>
+        <div id="eventID" style="margin-top:5px;"></div>
+        </div>
+        <div class="modal-footer">
+            <form name="form" id="form" method = 'post'>
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button type="submit" class="btn btn-danger" name="del_button" id = "del_button" onclick="pick_event_id();" >Delete</button>
+        </form>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block vis %} collapse navbar-collapse {% endblock %}
+<!-- {% set active_page = 'login' %}  -->
+{% block title %} Series Info Page {% endblock %}
+{% block content %}
+<div id = series_name>
+<p> Movie Title : {{ series_imdb_data['title'] }} </p>
+<p> Seasons: {{ series_imdb_data['tvSeriesInfo']['seasons'] }}</p>
+</div>
+    <form method="post">
+            {{ form.csrf_token }}
+            <div class="mb-3">
+	        <fieldset class="form-field">
+		        {{ form.season_no.label(class="form-label") }}
+		        {{ form.season_no(class="form-control") }}
+            </fieldset>
+            </div>
+        {{ form.add_to_calendar(class="btn btn-primary" ) }}
+            </form>
+{% endblock %}
