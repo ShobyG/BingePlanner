@@ -180,50 +180,28 @@ def search_by_imdb_id(imdb_id):
     form = titleForm()
     myData = SeriesInfo(imdb_id)
     user_choices = {}
+    form2 = SeriesEventForm()
     
     if request.method == "POST":
-        # for x in range(30):
-        x = request.form["season_btn"]
-        print(x)
-
-
-    # title = myData.series_title
+        btn_txt = request.form["season_btn"]
+        split = btn_txt.split("-",1)
+        season = int(split[1])
+        print(f"parsed season: {season}")
+        user_choices["season"] = season
+        season_runtime = myData.series_runtime_totals[season]
+        user_choices["season_runtime"] = season_runtime
+        title = myData.series_title + " (Season " + str(season) + ")"
+        user_choices["title"] = title
+        print(f"USER CHOICE DICT: {user_choices}")
+        form2.series_name.data = title
+        form2.length.data = season_runtime
+        return render_template("series_event.html", data=user_choices.items(), form=form2)
     # desc = myData.series_plot
     # img = myData.series_image
     # rating = myData.series_rating
     # seasons = myData.seasons_list
     # season_runtime = myData.series_runtime_totals  
-    # season1=myData.series_runtime_totals[1]
     
-    # myData = find_id(imdb_id)
-    # episodes = []
-
-    # # print(len(myData['tvSeriesInfo']['seasons']))
- 
-    # if len(myData['tvSeriesInfo']['seasons']) > 1:
-    #     set = {}
-    #     for s in myData['tvSeriesInfo']['seasons']:
-            
-    #         ep = find_episodes(imdb_id, s)
-    #         # print(f"EP EPISODES | SEASON: {ep['episodes'][int(e)]['seasonNumber']} | EPISODE: {ep['episodes'][int(e)]['episodeNumber']} | TITLE: {ep['episodes'][int(e)]['title']}")
-
-    #         print(f"________________________ SEASON EPISODES: {ep}" )
-
-    #         print(f"SeasonE: {s}")
-    #         season = ep['episodes'][int(s)]['seasonNumber']
-    #         print(f"SeasonNumber: {season}")
-    #         episode = ep['episodes'][int(s)]['episodeNumber'] 
-    #         print(f"Episode: {episode}")
-    #         title = ep['episodes'][int(s)]['title']
-    #         print(f"Title: {title}")
-    #         set['season'] = season 
-    #         set['episode'] = episode
-    #         set['title'] = title
-    #         episodes.append(set)
-    #         print(f"Appended episodes: {episodes}")
-    #         # print(f"SET: {set}")
-    # # print(episodes)  
-
     return render_template("title.html", myData=myData, form=form)
     # return f"title of {imdb_id} is {title}"
 
