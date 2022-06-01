@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash
+from flask import Flask, render_template, request, redirect, flash, url_for
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, IntegerField, FileField, DateField, TimeField, widgets, SelectMultipleField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange
@@ -13,6 +13,9 @@ from models import db, login, UserModel, EventModel
 
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
 from event_planner import EventPlanner
+
+global user_choices
+user_choices = {}
 
 class Username:
     """ to store the username """
@@ -174,27 +177,6 @@ def search():
         print(form.errors)
     return render_template("search.html",form=form)
 
-@app.route("/<imdb_id>", methods=['GET', 'POST'])
-def search_by_imdb_id(imdb_id):
-    form = titleForm()
-    myData = SeriesInfo(imdb_id)
-    global user_choices
-    user_choices = {}
-    
-    if request.method == "POST":
-        btn_txt = request.form["season_b"]
-        split = btn_txt.split("-",1)
-        season = int(split[1])
-        print(f"parsed season: {season}")
-        user_choices["season"] = season
-        season_runtime = myData.series_runtime_totals[season]
-        user_choices["season_runtime"] = season_runtime
-        title = myData.series_title + " (Season " + str(season) + ")"
-        user_choices["title"] = title
-        print(f"USER CHOICE DICT: {user_choices}")
-        return redirect("/series_event")
-    
-    return render_template("title.html", myData=myData, form=form)
 
 @app.route("/home",methods=['GET','POST'])
 def home():
@@ -269,14 +251,42 @@ def register():
     return render_template('register.html', form=form)
 
 
-@app.route('/series_event', methods=["POST", "GET"])
-def series_event_page():
+@app.route("/<imdb_id>", methods=['GET', 'POST'])
+def search_by_imdb_id(imdb_id):
+    form = titleForm()
+    myData = SeriesInfo(imdb_id)
+    
+    if request.method == "POST":
+        btn_txt = request.form["season_b"]
+        split = btn_txt.split("-",1)
+        season = int(split[1])
+        print(f"parsed season: {season}")
+        user_choices["season"] = season
+        season_runtime = myData.series_runtime_totals[season]
+        user_choices["season_runtime"] = season_runtime
+        title = myData.series_title + " (Season " + str(season) + ")"
+        user_choices["title"] = title
+        series_name_season_no_runtime = f"{title}:{season}:{season_runtime}"
+        print(f"USER CHOICE DICT: {user_choices}")
+        # return render_template("series_event.html", data=user_choices.items(), form=form2)
+        return redirect(url_for('series_event_page', name=series_name_season_no_runtime))
+    
+    return render_template("title.html", myData=myData, form=form)
+
+
+@app.route('/series_event/<name>', methods=["POST", "GET"])
+def series_event_page(name):
+    print(name)
+    series_info = name.split(":")
+    series_name = str(series_info[0])
+    season_no = int(series_info[1])
+    season_runtime = int(series_info[2])
     form = SeriesEventForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
-                form.series_name.data = user_choices['title']
-                form.length.data = user_choices ['season_runtime']
+                form.series_name = series_name + " (Season: " + season_no + ")"
+                form.length = season_runtime
                 series_name = request.form["series_name"]
                 length = request.form["length"]
                 monday = request.form["monday"]
@@ -306,6 +316,8 @@ def series_event_page():
                 create_json_file(un.get_username(), events)
                 return redirect("/calendar")
             if request.method == "GET":
+                form.series_name = series_name + " (Season: " + season_no + ")"
+                form.length = season_runtime
                 return render_template("series_event.html", form=form)
     return render_template("series_event.html", form=form)
 
