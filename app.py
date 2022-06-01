@@ -65,8 +65,10 @@ class titleForm(FlaskForm):
     title_plot = StringField(label="plot", render_kw={'readonly': True})
     title_image = FileField()  
     title_seasons = StringField(label="seasons")    
-    title_rating = StringField(label="rating")    
-
+    title_rating = StringField(label="rating")
+    season_btn = SubmitField(label = "Season X")
+    season_runtime = StringField(label="season runtime:")
+        
 class MovieEventForm(FlaskForm):
     """ form to create movie event"""
     event_name = StringField(label="movie name", validators=[DataRequired()])
@@ -173,10 +175,26 @@ def search():
         print(form.errors)
     return render_template("search.html",form=form)
 
-@app.route("/<imdb_id>")
+@app.route("/<imdb_id>", methods=['GET', 'POST'])
 def search_by_imdb_id(imdb_id):
     form = titleForm()
     myData = SeriesInfo(imdb_id)
+    user_choices = {}
+    
+    if request.method == "POST":
+        # for x in range(30):
+        x = request.form["season_btn"]
+        print(x)
+
+
+    # title = myData.series_title
+    # desc = myData.series_plot
+    # img = myData.series_image
+    # rating = myData.series_rating
+    # seasons = myData.seasons_list
+    # season_runtime = myData.series_runtime_totals  
+    # season1=myData.series_runtime_totals[1]
+    
     # myData = find_id(imdb_id)
     # episodes = []
 

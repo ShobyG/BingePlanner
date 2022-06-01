@@ -38,15 +38,32 @@
 
           <div class="col">   
               {% for num in myData['seasons_list'] %}
-                  <a class = "btn btn-primary" data-bs-toggle="collapse" href="#season{{num}}" role="button" aria-controls="season{{num}}">Season {{num}}</a>    
-                          <div class = "col">
-                              <div class = "collapse multi-collapse" id="season{{num}}">
+<!--                  <a class = "btn btn-primary" data-bs-toggle="collapse" href="#season{{num}}" role="button" aria-controls="season{{num}}">Season {{num}}</a>  -->  
+                {% set bt = "Season-" + num %}
 
-                                {% for ep in range(myData['season_tot_episodes'][num]|length) %}  
+                <input class="btn btn-primary" type="submit" name="season_btn" value={{bt}}>
+<!--                {{ form.season_btn(class="btn btn-primary") }}   -->
+ 
+                <div class="col">
+                  {{ form.season_runtime.label(class="form-label") }}
+            </div>
 
-                                    <div class = "card card-body">TITLE: {{ myData['s_ep_title'][num][ep] }} 
+
+    <div class="col">
+      {% set nm = num|int %}
+      {% for sert in myData['series_runtime_totals'] %}
+        {% if loop.index0 == nm %}
+          {{ sert }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <!--                         <div class = "collapse multi-collapse" id="season{{num}}">    -->
+                            <div>
+                                <div>
                                     </div>
-                                {% endfor %}
+                                  </div>
                                 </div>
                           </div>
                       </div>
@@ -61,7 +78,7 @@
           <div class="col">
                 {{ form.title_rating.label(class="form-label") }}
           <div class="col">      
-                {{ myData['series_rating']}}
+                {{ myData['series_rating'] }}
             </div>
           </div>
         <div class = "row">
