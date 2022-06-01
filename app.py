@@ -14,7 +14,6 @@ from models import db, login, UserModel, EventModel
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
 from event_planner import EventPlanner
 
-
 class Username:
     """ to store the username """
     def __init__(self):
@@ -66,7 +65,7 @@ class titleForm(FlaskForm):
     title_image = FileField()  
     title_seasons = StringField(label="seasons")    
     title_rating = StringField(label="rating")
-    season_btn = SubmitField(label = "Season X")
+    # season_btn = SubmitField(label = "Season X")
     season_runtime = StringField(label="season runtime:")
         
 class MovieEventForm(FlaskForm):
@@ -179,11 +178,11 @@ def search():
 def search_by_imdb_id(imdb_id):
     form = titleForm()
     myData = SeriesInfo(imdb_id)
+    global user_choices
     user_choices = {}
-    form2 = SeriesEventForm()
     
     if request.method == "POST":
-        btn_txt = request.form["season_btn"]
+        btn_txt = request.form["season_b"]
         split = btn_txt.split("-",1)
         season = int(split[1])
         print(f"parsed season: {season}")
@@ -193,9 +192,7 @@ def search_by_imdb_id(imdb_id):
         title = myData.series_title + " (Season " + str(season) + ")"
         user_choices["title"] = title
         print(f"USER CHOICE DICT: {user_choices}")
-        form2.series_name.data = title
-        form2.length.data = season_runtime
-        return render_template("series_event.html", data=user_choices.items(), form=form2)
+        return redirect("/series_event")
     
     return render_template("title.html", myData=myData, form=form)
 
@@ -278,6 +275,8 @@ def series_event_page():
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
+                form.series_name.data = user_choices['title']
+                form.length.data = user_choices ['season_runtime']
                 series_name = request.form["series_name"]
                 length = request.form["length"]
                 monday = request.form["monday"]
