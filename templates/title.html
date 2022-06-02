@@ -14,75 +14,74 @@
     <form action="#" method="post" enctype="multipart/form-data" class="text-dark">
     {{ form.csrf_token }}
 <!--    <div class="row" style = "background-image: url({{ url_for('static', filename='image.jpg', mode = 'fit') }})"> -->
-      <div class = "row">
-        <div class="col">
-              {{ form.title_name.label(class="form-label") }}
+  <div class="container-fluid">
+
+    <div class="row">
+        <div class="col-xs-2 col-sm-2 col-lg-2">
+          {{ form.title_name.label(class="form-label") }}
         </div>
-        <div class="col">
-              {{ myData['series_title']}}
-          </div>
-      </div>
-
-      <div class = "row">
-        <div class="col">
-              {{ form.title_plot.label(class="form-label") }}
+        <div class="col-xs-6 col-sm-6 col-lg-6">
+          {{ myData['series_title']}}
         </div>
-        <div class="col">
-              {{ myData['series_plot']}}
-          </div>
-      </div>
-
-
-      <div class = "row">
-
-          <div class="col">
-              {% for num in myData['seasons_list'] %}
-<!--                  <a class = "btn btn-primary" data-bs-toggle="collapse" href="#season{{num}}" role="button" aria-controls="season{{num}}">Season {{num}}</a>  -->
-                {% set bt = "Season-" + num %}
-
-                <input class="btn btn-primary" type="submit" name="season_b" value={{bt}}>
-
-                <div class="col">
-                  {{ form.season_runtime.label(class="form-label") }}
-            </div>
-
-    <div class="col">
-      {% set nm = num|int %}
-      {% for sert in myData['series_runtime_totals'] %}
-        {% if loop.index0 == nm %}
-          {{ sert }}
-        {% endif %}
-      {% endfor %}
     </div>
-  </div>
 
-  <!--                         <div class = "collapse multi-collapse" id="season{{num}}">    -->
-                            <div>
-                                <div>
-                                    </div>
-                                  </div>
-                                </div>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-              {% endfor %}
-          </div>
+    <div class="row">
+      <div class="col-xs-2 col-sm-2 col-lg-2">
+        {{ form.title_plot.label(class="form-label") }}
 
+        {% for num in myData['seasons_list'] %}
+        <div class = "row">
+          <div class="col-xs-6 col-sm-6 col-lg-6">
+            {% set bt = "Season-" + num %}
+            <input class="btn btn-primary" type="submit" name="season_b" value={{bt}}>
         </div>
 
-        <div class = "row">
-          <div class="col">
-                {{ form.title_rating.label(class="form-label") }}
-          <div class="col">
-                {{ myData['series_rating'] }}
-            </div>
-          </div>
-        <div class = "row">
-        <div class="col">
-          <img src={{ myData['series_image'] }} class="img-thumbnail" style="max-height:300px;max-width:300px;">
-          </div>
+        <div class="col-xs-4 col-sm-4 col-lg-4">
+          {{ form.season_runtime.label(class="form-label") }}
+        </div>
+
+        <div class="col-xs-2 col-sm-2 col-lg-2">
+          {% set nm = num|int %}
+          {% for sert in myData['series_runtime_totals'] %}
+            {% if loop.index0 == nm %}
+              {{ sert }}
+            {% endif %}
+          {% endfor %}
+        </div>
+
       </div>
+      {% endfor %}
+
+    </div>
+
+      <div class="col-xs-6 col-sm-6 col-lg-6">
+        {{ myData['series_plot']}}
+      </div>
+      <div class="col-xs-4 col-sm-4 col-lg-4">
+        <img src={{ myData['series_image'] }} class="img-thumbnail" style="max-height:300px;max-width:300px;">
+
+        <div class="row">
+          <div class="col-xs-3 col-sm-3 col-lg-3 text-end">
+            {{ form.title_rating.label(class="form-label") }}
+          </div>
+            <div class="col-xs-3 col-sm-3 col-lg-3">
+            {{ myData['series_rating'] }}
+            </div>
+  
+        </div>
+  
+
+      </div>
+
+    </div>
+
+
+        </div>
+    </div>
+
+  </div>
+  
+
 
     </form>
 

@@ -63,9 +63,9 @@ class titleForm(FlaskForm):
     title_plot = StringField(label="plot", render_kw={'readonly': True})
     title_image = FileField()
     title_seasons = StringField(label="seasons")
-    title_rating = StringField(label="rating")
+    title_rating = StringField(label="rating:")
     # season_btn = SubmitField(label = "Season X")
-    season_runtime = StringField(label="season runtime:")
+    season_runtime = StringField(label="runtime:")
 
 
 class searchForm(FlaskForm):
