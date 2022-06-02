@@ -63,9 +63,9 @@ class titleForm(FlaskForm):
     title_plot = StringField(label="plot", render_kw={'readonly': True})
     title_image = FileField()
     title_seasons = StringField(label="seasons")
-    title_rating = StringField(label="rating:")
+    title_rating = StringField(label="rating")
     # season_btn = SubmitField(label = "Season X")
-    season_runtime = StringField(label="runtime:")
+    season_runtime = StringField(label="season runtime:")
 
 
 class searchForm(FlaskForm):
@@ -265,7 +265,9 @@ def register():
 @app.route("/<imdb_id>", methods=['GET', 'POST'])
 def search_by_imdb_id(imdb_id):
     form = titleForm()
-    myData = SeriesInfo(imdb_id)
+    si = SeriesInfo(imdb_id)
+    myData = si.series_details
+    print(si.get__series_data())
     global user_choices
     user_choices = {}
 
@@ -275,20 +277,19 @@ def search_by_imdb_id(imdb_id):
         season = int(split[1])
         print(f"parsed season: {season}")
         user_choices["season"] = season
-        season_runtime = myData.series_runtime_totals[season]
+        season_runtime = si.get_season_runtime(int(season))
         user_choices["season_runtime"] = season_runtime
-        title = myData.series_title
+        title = si.series_title
         user_choices["title"] = title
         series_name_season_no_runtime = f"{title}:{season}:{season_runtime}"
         print(f"USER CHOICE DICT: {user_choices}")
         return redirect(url_for('series_event_page', name=series_name_season_no_runtime))
 
-    return render_template("title.html", myData=myData, form=form)
+    return render_template("title.html", myData=si, form=form)
 
 
 @app.route("/series_event/<name>", methods=["POST", "GET"])
 def series_event_page(name):
-    print(f"(name): {name}")
     series_info = name.split(":")
     series_name = str(series_info[0])
     season_no = int(series_info[1])
@@ -298,6 +299,7 @@ def series_event_page(name):
         if current_user.is_authenticated:
             if request.method == "POST":
                 start_date = request.form["start_date"]
+                print(start_date)
                 monday = request.form["monday"]
                 tuesday = request.form["tuesday"]
                 wednesday = request.form["wednesday"]
@@ -416,7 +418,6 @@ def delete_event(event_id):
             break
     res = [j for j in events if not (j['groupId'] == group_id)]  # deletes the group events
     create_json_file(un.get_username(), res)  # uploads the new list to the database
-
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)
