@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %} Event Planner {% endblock %}
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }}</p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <div class="row">
+    <div class="col">
+    <div class="form_wrapper">
+    <div class="form_container">
+        <div class="title_container">
+      <h2> Series Event </h2>
+    </div>
+    <div class="mb-3">
+        <div class="row">
+            <div class="col">
+            <p> Series Name : </p>
+            </div>
+            <div class="col">
+            <p> {{ series_name }} </p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+            <p> Season No : </p>
+            </div>
+            <div class="col">
+            <p> {{ season_no }} </p>
+            </div>
+        </div>
+    </div>
+<form method="post">
+  {{ form.csrf_token }}
+  <div class="mb-3">
+	<fieldset class="form-field">
+        {{ form.start_date.label(class="form-label") }}
+        {{ form.start_date(class="form-control") }}
+    </fieldset>
+    <fieldset class="form-field">
+        {{ form.days.label(class="form-label") }}
+		{{ form.days(class="form-control") }}
+    </fieldset>
+  </div>
+    <div class="mb-3">
+    <fieldset class="form-field">
+        <p> Enter time in Hours</p>
+		{{ form.monday.label(class="form-label") }}
+		{{ form.monday(class="form-control") }}
+        {{ form.tuesday.label(class="form-label") }}
+		{{ form.tuesday(class="form-control") }}
+        {{ form.wednesday.label(class="form-label") }}
+		{{ form.wednesday(class="form-control") }}
+        {{ form.thursday.label(class="form-label") }}
+		{{ form.thursday(class="form-control") }}
+        {{ form.friday.label(class="form-label") }}
+		{{ form.friday(class="form-control") }}
+        {{ form.saturday.label(class="form-label") }}
+		{{ form.saturday(class="form-control") }}
+        {{ form.sunday.label(class="form-label") }}
+		{{ form.sunday(class="form-control") }}
+
+    </fieldset>
+    </div>
+  {{ form.add_event(class="btn btn-primary" ) }}
+    <p class="credit"> <a href="/home" role="button">Cancel</a></p>
+ </form>
+</div>
+    </div>
+    </div>
+    </div>
+
+ {% endblock %}

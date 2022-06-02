@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% set active_page = 'Binge Planner' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+    <section class="page-section bg-try" id="about">
+            <div class="container px-4 px-lg-5">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }} </p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <form action="#" method="post">
+    {{ form.csrf_token }}
+      <div class = "row">
+      <div class="col">
+            {{ form.search_text.label(class="form-label color:") }}
+		    {{ form.search_text(class="form-control") }}
+
+
+        <div class="col">
+          <br>
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+      </div>
+      </div>
+    </form>
+            </div></section>
+ {% endblock %}
