@@ -41,6 +41,7 @@ a {
   background-image: url("/static/img/image.jpg"); 
 }
 
+
 .hero {
   background-image: url(../img/movietime.png);
   background-size: cover;
