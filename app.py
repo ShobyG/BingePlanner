@@ -186,7 +186,7 @@ def search():
         else:
             return render_template("search.html", form=form)
     else:
-        print(form.errors)
+        flash(form.errors)
     return render_template("search.html", form=form)
 
 
@@ -276,7 +276,7 @@ def search_by_imdb_id(imdb_id):
     form = titleForm()
     si = SeriesInfo(imdb_id)
     myData = si.series_details
-    print(si.get__series_data())
+    # print(si.get__series_data())
     global user_choices
     user_choices = {}
 
@@ -284,20 +284,16 @@ def search_by_imdb_id(imdb_id):
         btn_txt = request.form["season_b"]
         split = btn_txt.split("-", 1)
         season = int(split[1])
-        print(f"parsed season: {season}")
         user_choices["season"] = season
         season_runtime = si.get_season_runtime(int(season))
         user_choices["season_runtime"] = season_runtime
         title = si.series_title
         user_choices["title"] = title
         season_ep_list = si.get__series_data()[(int(season))]
-        print(season_ep_list)
         season_ep = ''
         for i in range(1, len(season_ep_list)):
-            season_ep += ':'+str(season_ep_list[i])
-        print(season_ep)
-        series_name_season_no_runtime = f"{title}:{season}:{season_runtime}{season_ep}"
-        print(f"USER CHOICE DICT: {user_choices}")
+            season_ep += str(season_ep_list[i])+':'
+        series_name_season_no_runtime = f"{title}#:#:#{season}#:#:#{season_runtime}#:#:#{season_ep}"
         return redirect(url_for('series_event_page', name=series_name_season_no_runtime))
 
     return render_template("title.html", myData=si, form=form)
@@ -306,20 +302,22 @@ def search_by_imdb_id(imdb_id):
 
 @app.route("/series_event/<name>", methods=["POST", "GET"])
 def series_event_page(name):
-    series_info = name.split(":")
+    series_info = name.split("#:#:#")
     series_name = str(series_info[0])
     season_no = int(series_info[1])
     season_runtime = int(series_info[2])
+    ep_list_str = series_info[3]
+    ep_list = ep_list_str.split(":")
     season_episode_runtime = [None]
-    for i in range(3, len(series_info)):
-        season_episode_runtime.append(int(series_info[i]))
+    for i in range(len(ep_list)-1):
+        season_episode_runtime.append(int(ep_list[i]))
 
     form = SeriesEventForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
             if request.method == "POST":
                 start_date = request.form["start_date"]
-                print(start_date)
+                # print(start_date)
                 monday = request.form["monday"]
                 tuesday = request.form["tuesday"]
                 wednesday = request.form["wednesday"]
