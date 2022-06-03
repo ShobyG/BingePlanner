@@ -13,7 +13,7 @@ class EventPlanner:
         if self.__start_date != self.__now_date:
             self.__now_date = self.__start_date
             self.__now_time = '00:00:00'
-        self.__now_day = datetime.today().weekday()
+        self.__now_day = datetime.fromisoformat(self.__now_date).weekday()
         self.__set_title(name)
         self.__days = [0, 0, 0, 0, 0, 0, 0]
         self.__set_days(days)
@@ -135,15 +135,17 @@ class EventPlanner:
                     if ep_no == len(episode_hours_list):
                         break
                 elif time_left < episode_hours_list[ep_no]:
+
+                    episode_hours_list[ep_no] = episode_hours_list[ep_no] - time_left
                     time_left = 0
-                    episode_hours_list[ep_no] -= time_left
+
                 elif time_left == episode_hours_list[ep_no]:
                     time_left = 0
                     ep_no += 1
         return ep_list
 
 if __name__ == '__main__':
-    ep = EventPlanner("test", [1, 1, 1, 1, 1, 1, 1], [1, 1, 1, 1, 1, 1, 1], 321, '2022-06-03', [None, 35, 32, 30, 31, 30, 34, 26, 32, 35, 36])
+    ep = EventPlanner("test", [0, 0, 0, 0, 0, 1, 1], [0, 0, 0, 0, 0, 1, 2], 321, '2022-06-11', [None, 35, 32, 30, 31, 30, 34, 26, 32, 35, 36])
     print(ep.check_schedule_today())
     print(ep.next_index(1))
     dates_list = ep.date_generator()
