@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, flash, url_for
+from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, FileField, PasswordField, SubmitField, IntegerField, DateField, TimeField, widgets, SelectMultipleField
 from wtforms.validators import DataRequired, Length, EqualTo, Email, NumberRange
@@ -16,18 +16,6 @@ from models import db, login, UserModel, EventModel
 
 from calendar_planner import CalenderMovieEvent, CalenderSeriesEvent
 from event_planner import EventPlanner
-
-
-class Username:
-    """ to store the username """
-    def __init__(self):
-        self.__username = ""
-
-    def set_username(self, username):
-        self.__username = username
-
-    def get_username(self):
-        return self.__username
 
 
 class HwLoginForm(FlaskForm):
@@ -141,7 +129,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db.init_app(app)
 login.init_app(app)
-un = Username()
 
 
 def add_user(email, username, password):
@@ -214,7 +201,7 @@ def login():
             if user is not None:
                 if user.check_password(pw):
                     login_user(user)
-                    un.set_username(username)
+                    session["user"] = username
                     flash(f"Welcome back {username}. Logged in successfully", "info")
                     return redirect('/search')
                 else:
@@ -335,16 +322,16 @@ def series_event_page(name):
                 dates_lst = ep.date_generator()
                 watch_hours_list = ep.get_watch_hour_list()
                 episode_list = ep.generate_episode_list()
-                user_event = EventModel.query.filter_by(username=un.get_username()).first()
+                user_event = EventModel.query.filter_by(username=session['user']).first()
                 if user_event is not None:
                     events = create_event_list()
-                    del_event(un.get_username())
+                    del_event(session['user'])
                 else:
                     events = []
 
                 cse = CalenderSeriesEvent(events, f"{series_name}- Season:{season_no}", dates_lst, watch_hours_list, episode_list)
                 events = cse.events
-                create_json_file(un.get_username(), events)
+                create_json_file(session['user'], events)
                 return redirect("/calendar")
             if request.method == "GET":
                 return render_template("series_event.html", form=form, series_name=series_name, season_no=season_no)
@@ -361,15 +348,15 @@ def movie_event_page():
                 length = request.form["length"]
                 start_date = request.form["start_date"]
                 start_time = request.form["start_time"]
-                user_event = EventModel.query.filter_by(username=un.get_username()).first()
+                user_event = EventModel.query.filter_by(username=session['user']).first()
                 if user_event is not None:
                     events = create_event_list()
-                    del_event(un.get_username())
+                    del_event(session['user'])
                 else:
                     events = []
                 ce = CalenderMovieEvent(events, event_name, start_date, start_time, length)
                 events = ce.events
-                create_json_file(un.get_username(), events)
+                create_json_file(session['user'], events)
                 return redirect("/calendar")
             if request.method == "GET":
                 return render_template("movie_event.html", form=form)
@@ -412,15 +399,15 @@ def create_json_file(username, events):
 
 def create_event_list():
     """ returns the user's events list from the database"""
-    user_event = EventModel.query.filter_by(username=un.get_username()).first()
+    user_event = EventModel.query.filter_by(username=session["user"]).first()
     if user_event is None:
         event_list = []
     else:
         json_binary_file = user_event.events
-        write_to_file(json_binary_file, un.get_username())
-        with open(f"{un.get_username()}.json", "r") as read_file:
+        write_to_file(json_binary_file, session["user"])
+        with open(f"{session['user']}.json", "r") as read_file:
             event_list = json.load(read_file)
-        os.remove(f"{un.get_username()}.json")
+        os.remove(f"{session['user']}.json")
     return event_list
 
 
@@ -428,7 +415,7 @@ def delete_event(event_id):
     """ given an event id, it deletes all the group events and the event with the passed event it
     the function updates the events list to the database"""
     events = create_event_list()  # events list of the user
-    del_event(un.get_username())  # deletes the json from database
+    del_event(session['user'])  # deletes the json from database
     group_id = None
     for i in range(len(events)):  # deletes the respective event
         if events[i]['id'] == event_id:
@@ -436,7 +423,7 @@ def delete_event(event_id):
             del events[i]
             break
     res = [j for j in events if not (j['groupId'] == group_id)]  # deletes the group events
-    create_json_file(un.get_username(), res)  # uploads the new list to the database
+    create_json_file(session['user'], res)  # uploads the new list to the database
 
 
 if __name__ == "__main__":
