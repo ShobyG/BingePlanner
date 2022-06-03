@@ -171,6 +171,7 @@ def search():
             title = request.form["search_text"]
             return render_template("search_result.html", myData=find_titles(title), form=form)
         else:
+            flash(form.errors)
             return render_template("search.html", form=form)
     else:
         flash(form.errors)
@@ -232,7 +233,7 @@ def base():
     return render_template("base.html")
 
 
-@app.route('/index.html')
+@app.route('/index')
 def index():
     return render_template("index.html")
 
@@ -254,6 +255,7 @@ def register():
                 flash(f"Registered successfully... Logging in as {username}!")
                 user = UserModel.query.filter_by(username=username).first()
                 login_user(user)
+                session["user"] = username
                 return redirect('/home')
     return render_template('register.html', form=form)
 
@@ -279,10 +281,12 @@ def search_by_imdb_id(imdb_id):
         season_ep_list = si.get__series_data()[(int(season))]
         season_ep = ''
         for i in range(1, len(season_ep_list)):
+            if season_ep_list[i] is None:
+                season_ep_list[i] = 0
             season_ep += str(season_ep_list[i])+':'
         series_name_season_no_runtime = f"{title}#:#:#{season}#:#:#{season_runtime}#:#:#{season_ep}"
         return redirect(url_for('series_event_page', name=series_name_season_no_runtime))
-
+    flash(form.errors)
     return render_template("title.html", myData=si, form=form)
 
 
@@ -334,7 +338,9 @@ def series_event_page(name):
                 create_json_file(session['user'], events)
                 return redirect("/calendar")
             if request.method == "GET":
+                flash(form.errors)
                 return render_template("series_event.html", form=form, series_name=series_name, season_no=season_no)
+    flash(form.errors)
     return render_template("series_event.html", form=form, series_name=series_name, season_no=season_no)
 
 
