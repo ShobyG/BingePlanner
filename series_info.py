@@ -36,15 +36,26 @@ class SeriesInfo:
                     episode_imdb_id = season_data['episodes'][j - 1]['id']
                     try:
                         run_time = find_id(episode_imdb_id)['runtimeMins']
-                        if run_time is None:
-                            break
                     except Exception as e:
                         print(Exception)
                         break
-                    if run_time[0] == "P":
-                        run_time = int(isodate.parse_duration(run_time).total_seconds() / 60)
+                    if run_time is not None:
+                        if run_time[0] == "P":
+                            run_time = int(isodate.parse_duration(run_time).total_seconds() / 60)
+                        else:
+                            run_time = int(run_time)
                     else:
-                        run_time = int(run_time)
+                        try:
+                            run_time = find_id(episode_imdb_id)['runtimeMins']
+                        except Exception as e:
+                            print(Exception)
+                            break
+                        if run_time is not None:
+                            if run_time[0] == "P":
+                                run_time = int(isodate.parse_duration(run_time).total_seconds() / 60)
+                            else:
+                                run_time = int(run_time)
+
                     self.__series_data[int(i)][int(j)] = run_time
 
         elif self.series_details['type'] == 'Movie':
@@ -106,6 +117,7 @@ class SeriesInfo:
 
     def get_season_list(self):
         return self.__seasons_list
+
 
 if __name__ == '__main__':
     # si = SeriesInfo('tt1865718')  # [Gravity Falls works/ Total also works]
