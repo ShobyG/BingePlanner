@@ -115,7 +115,7 @@ class SeriesEventForm(FlaskForm):
                                        ('4', 'Friday'),
                                        ('5', 'Saturday'),
                                        ('6', 'Sunday')
-                                   ])
+                                   ],validators=[DataRequired()])
     monday = IntegerField(label='Monday', default=0, validators=[NumberRange(min=0, max=24)])
     tuesday = IntegerField(label='Tuesday', default=0, validators=[NumberRange(min=0, max=24)])
     wednesday = IntegerField(label='Wednesday', default=0, validators=[NumberRange(min=0, max=24)])
@@ -175,6 +175,7 @@ def create_table():
 @app.route("/search", methods=['GET', 'POST'])
 @login_required
 def search():
+
     form = searchForm()
     if request.method == "POST":
         if form.validate_on_submit():
@@ -350,6 +351,12 @@ def series_event_page(name):
                 for i in range(7):
                     if str(i) in days:
                         days_lst[i] = 1
+                count_days = 0
+                count_hours =0
+                for i in range(len(days_lst)):
+                    if days_lst[i] != 0 and watch_hours[i] == 0:
+                        return render_template("series_event.html", form=form, series_name=series_name, season_no=season_no)
+
                 ep = EventPlanner(series_name, days_lst, watch_hours, int(season_runtime), start_date, season_episode_runtime)
                 dates_lst = ep.date_generator()
                 watch_hours_list = ep.get_watch_hour_list()
