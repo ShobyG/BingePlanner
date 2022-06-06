@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% set active_page = 'Binge Planner' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+    <section class="page-section bg-try" id="about">
+            <div class="container px-4 px-lg-5">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }}</p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+            <div class="card">
+    <table class="table">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col"> Title </th>
+        <th scope="col">Ranking</th>
+        <th scope="col">Rating</th>
+        <th scope="col">Year</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for result in myData %}
+      <tr>
+        <th scope="row"></th>
+        <td class="align-middle"><img src={{ result['image'] }} class="img-thumbnail" style="max-height:150px;max-width:150px;">
+            <a class="align-middle" href="/{{result['id']}}" target="_blank" rel="noopener noreferrer">
+                {{ result['title']}} </a> </td>
+        <td class="align-middle">{{ result['rank']}}</td>
+        <td class="align-middle">{{ result['imDbRating']}}</td>
+        <td class="align-middle">{{ result['year']}}</td>
+      </tr>
+  {% endfor %}
+  </tbody>
+</table>
+           </div> </div></section>
+ {% endblock %}
