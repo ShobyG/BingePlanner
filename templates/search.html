@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% set active_page = 'Binge Planner' %}
+{% block title %} Home {% endblock %}
+{% block content %}
+    <section class="page-section bg-try" id="about">
+            <div class="container px-4 px-lg-5">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        {% for msg in messages %}
+            <p> {{ msg }} </p>
+        {% endfor %}
+        {% endif %}
+    {% endwith %}
+<div id="portfolio">
+            <div class="container-fluid p-0">
+                <div class="row g-0">
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Search For Movies">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/1.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <div class="project-name">Search For Movies/Series</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                    {{ form.csrf_token }}
+                                    <div class = "row">
+                                    <div class="col">
+		                            {{ form.search_text(class="form-control") }}
+                                    <div class="col">
+                                      <br>
+                                        {{ form.submit(class="btn btn-primary") }}
+                                    </div>
+                                  </div>
+                                  </div>
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Top 250 Movies">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/2.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                <button class="btn btn-primary btn-xl" id="btn" name="btn" value="Top 250 Movies" type="submit">Top 250 Movies</button>
+{#                                <input type="submit" name="btn" value="Top 250 Movies">#}
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Top 250 Series">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/3.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                <button class="btn btn-primary btn-xl" id="btn" name="btn" value="Top 250 Series" type="submit">Top 250 Movies</button>
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Most Popular Movies">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/4.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                <button class="btn btn-primary btn-xl" id="btn" name="btn" value="Most Popular Movies" type="submit">Most Popular Movies</button>
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Most Popular Series">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/5.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                <button class="btn btn-primary btn-xl" id="btn" name="btn" value="Most Popular Series" type="submit">Most Popular Series</button>
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-lg-4 col-sm-6">
+                        <a class="portfolio-box" title="Box Office Hits">
+                            <img class="img-fluid" src="{{ url_for('static',filename='assets/img/portfolio/thumbnails/6.jpg')}}" alt="..." />
+                            <div class="portfolio-box-caption">
+                                <div class="project-category text-white-50">Category</div>
+                                <form id="contactForm" data-sb-form-api-token="API_TOKEN" method="POST">
+                                <button class="btn btn-primary btn-xl" id="btn" name="btn" value="Box Office Hits" type="submit">Box Office Hits</button>
+                                </form>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+</div></div></section>
+ {% endblock %}
